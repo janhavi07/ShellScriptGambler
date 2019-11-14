@@ -3,28 +3,39 @@
 echo WELCOME TO GAMBLER STIMULATOR
 
 #VARIABLES
-stake=100
+STAKE=100
 BET=1
 RESIGNVALUE=50
+NOOFDAYS=20
+stakeI=0
+totalAmount=0
 
-winningStake=$(( ($RESIGNVALUE*$stake)/100  + $stake ))
-losingStake=$(( $stake - ($RESIGNVALUE*$stake)/100 ))
+declare -A winLost
+winningStake=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
+losingStake=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
 
-while [ $stake -lt $winningStake  ] && [ $stake -gt $losingStake ]
-do
-	winlost=$(( RANDOM%2 ))
-	echo "HE BETS 1$"
-	if [ $winlost -eq 1 ]
-	then
-		echo WIN
-		stake=$(( $stake + $BET ))
-	else
-		echo LOST
-		stake=$(( $stake - $BET ))
-	fi
-	winningStake=$(( (50*$stake)/100 +$stake ))
-        losingStake=$(( $stake - (50*$stake)/100 ))
+for(( day=1; day<=$NOOFDAYS; day++ ))
+{
+	stakeI=$STAKE
+	while [ $stakeI -lt $winningStake  ] && [ $stakeI -gt $losingStake ]
+	do
+		winlost=$(( RANDOM%2 ))
+		echo "HE BETS 1$"
+		if [ $winlost -eq 1 ]
+		then
+			echo WIN
+			stakeI=$(( $stakeI + $BET ))
+		else
+			echo LOST
+			stakeI=$(( $stakeI - $BET ))
+		fi
 
-done
-echo "RESIGNS FOR THE DAY"
+	done
+	 winLost[$day]=$(( $stakeI - $STAKE ))
+         totalAmount=$(( totalAmount + $(( $stakeI - $STAKE )) ))
 
+
+}
+echo ${!winLost[@]}
+echo  ${winLost[@]}
+echo total Amount $totalAmount
