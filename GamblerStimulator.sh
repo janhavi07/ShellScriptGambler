@@ -6,9 +6,12 @@ echo WELCOME TO GAMBLER STIMULATOR
 STAKE=100
 BET=1
 RESIGNVALUE=50
-NOOFDAYS=20
+NOOFDAYS=30
 stakeI=0
 totalAmount=0
+win=0
+lose=0
+amount=0
 
 declare -A winLost
 winningStake=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
@@ -36,6 +39,13 @@ for(( day=1; day<=$NOOFDAYS; day++ ))
 
 
 }
-echo ${!winLost[@]}
-echo  ${winLost[@]}
-echo total Amount $totalAmount
+for k in "${winLost[@]}"
+do
+	amount=$(( $amount + $k ))
+done
+if [ $amount -lt 0 ]
+then
+	echo "Lost by : " $amount
+else
+	echo "Won by : " $amount
+fi
