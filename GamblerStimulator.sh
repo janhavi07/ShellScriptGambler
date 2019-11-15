@@ -21,6 +21,8 @@ declare -A luckyUnlucky
 winningStake=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
 losingStake=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
 
+function gamblerLogic()
+{
 for(( day=1; day<=$NOOFDAYS; day++ ))
 {
 	stakeI=$STAKE
@@ -45,48 +47,35 @@ for(( day=1; day<=$NOOFDAYS; day++ ))
 
 
 }
+winLose
+}
+
+function winLose()
+{
 for k in "${winLost[@]}"
 do
 	amount=$(( $amount + $k ))
 done
 if [ $amount -lt 0 ]
 then
-	echo "Lost by : " $amount
+	echo "You Lost by : " $amount
+	echo "BYE BYE "
 else
-	echo "Won by : " $amount
+	echo "You Won by : " $amount
+	read -p "Do you want to continue? Type 1 for YES and O for NO." yesNo
+	if [ $yesNo -eq 1 ]
+	then
+		gamblerLogic
+
+
+	else
+		echo "BYE BYE"
+	fi
 fi
+}
 
-for k in "${!luckyUnlucky[@]}" #Printing them by sorting by amount
-do
-        echo $k ${luckyUnlucky["$k"]}
-done |
-sort -n -k2 
-
-
-echo "Unluckyday****"
-for k in "${!luckyUnlucky[@]}"
-do
-
-        echo $k ${luckyUnlucky["$k"]}
-done |
-sort -n -k2 | head -n 1 # for printing Unlucky day
-
-echo "LuckyDay*******"
-for k in "${!luckyUnlucky[@]}"
-do
-	echo Luckyday amount
-        echo $k ${luckyUnlucky["$k"]}
-done |
-sort -n -k2 | tail -1 #for printing the Luckiest Day
+gamblerLogic
 
 
 
-
-
-
-
-
-
-
- 
 
