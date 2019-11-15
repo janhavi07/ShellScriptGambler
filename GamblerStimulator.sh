@@ -77,7 +77,7 @@ do
 	echo Luckyday amount
         echo $k ${luckyUnlucky["$k"]}
 done |
-sort -n -k2 | tail -1 #fro printing the Luckiest Day
+sort -n -k2 | tail -1 #for printing the Luckiest Day
 
 
 
