@@ -1,81 +1,105 @@
-#!/bin/bash 
+#!/bin/bash -x 
 
-echo WELCOME TO GAMBLER STIMULATOR
+echo "******WELCOME TO GAMBLER STIMULATOR*******"
 
 #VARIABLES
-STAKE=100
-BET=1
-RESIGNVALUE=50
-NOOFDAYS=20
-stakeI=0
-totalAmount=0
-win=0
-lose=0
-amount=0
-temperory=0  #to store count of Lucky Unlucky days
-unluck=0
-temp=0
-#Dictionary
-declare -A winLost
-declare -A luckyUnlucky
-winningStake=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
-losingStake=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
+declare STAKE=100
+declare BETAMOUNT=1
+declare RESIGNVALUE=50
+declare NOOFDAYSPLAYED=20
+declare initialStake=0
+declare totalAmountWinLost=0
+declare WIN=1
+declare LOSE=0
+declare addedAmountOfWinOrLost=0
+declare WINNINGSTAKE=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
+declare LOSINGSTAKE=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
 
-function gamblerLogic()
+#Dictionary
+declare -A winLostChart
+declare -A luckyUnluckyChart
+
+function gamblingLogic()
 {
-for(( day=1; day<=$NOOFDAYS; day++ ))
+for(( day=1; day<=$NOOFDAYSPLAYED; day++ ))
 {
-	stakeI=$STAKE
-	while [ $stakeI -lt $winningStake  ] && [ $stakeI -gt $losingStake ]
+	initialStake=$STAKE
+	while [ $initialStake -lt $WINNINGSTAKE  ] && [ $initialStake -gt $LOSINGSTAKE ]
 	do
-		winlost=$(( RANDOM%2 ))
+		isThisWinLost=$(( RANDOM%2 ))
 		echo "HE BETS 1$"
-		if [ $winlost -eq 1 ]
+		if [ $isThisWinLost -eq $WIN ]
 		then
 			echo WIN
-			stakeI=$(( $stakeI + $BET ))
-		else
+			initialStake=$(( $initialStake + $BETAMOUNT ))
+		else [ $isThisWinLost -eq $LOSE ]
 			echo LOST
-			stakeI=$(( $stakeI - $BET ))
+			initialStake=$(( $initialStake - $BETAMOUNT ))
 		fi
 
-	done
-	 winLost[$day]=$(( $stakeI - $STAKE ))
-	 #temperory=$(( $temperory + (( $stakeI - $STAKE )) ))
-         totalAmount=$(( totalAmount + $(( $stakeI - $STAKE )) ))
-	 luckyUnlucky[$day]=$totalAmount 
+	 done
+	 winLostChart[$day]=$(( $initialStake - $STAKE ))
+         totalAmountWinLost=$(( $totalAmountWinLost + $(( $initialStake - $STAKE )) ))
+	 luckyUnluckyChart[$day]=$totalAmountWinLost
 
 
 }
-winLose
+didHeWinOrLose
 }
 
-function winLose()
+
+function didHeWinOrLose()
 {
-for k in "${winLost[@]}"
-do
-	amount=$(( $amount + $k ))
-done
-if [ $amount -lt 0 ]
-then
-	echo "You Lost by : " $amount
-	echo "BYE BYE "
-else
-	echo "You Won by : " $amount
-	read -p "Do you want to continue? Type 1 for YES and O for NO." yesNo
-	if [ $yesNo -eq 1 ]
+	for k in "${winLostChart[@]}"
+	do
+		addedAmounOfWinOrLost=$(( $addedAmountOfWinOrLost + $k ))
+	done
+	if [ $addedAmountOfWinOrLost -lt 0 ]
 	then
-		gamblerLogic
-
-
+		echo "You Lost by : " $addedAmountOfWinOrLost
+		echo "BYE BYE "
 	else
-		echo "BYE BYE"
+		echo "You Won by : " $addedAmountOfWinOrLost
+		read -p "Do you want to continue? Type 1 for YES and O for NO." wantToContinueOrNot
+		if [ $wantToContinueOrNot -eq 1 ]
+		then
+			gamblingLogic
+
+		else
+			echo "BYE BYE"
+		fi
 	fi
-fi
 }
 
-gamblerLogic
+function toFindOutUnluckyDay()
+{
+	for k in "${!luckyUnluckyChart[@]}"
+	do
+		echo Unluckyday Amount
+        	echo $k ${luckyUnluckyChart["$k"]}
+	done |
+	sort -n -k2 | head -n 1 
+}
 
 
+function toFindOutLuckyDay()
+{
+	for k in "${!luckyUnluckyChart[@]}"
+	do
+		echo Luckyday amount
+        	echo $k ${luckyUnluckyChart["$k"]}
+	done |
+	sort -n -k2 | tail -1 
+}
+
+function main()
+{
+	gamblingLogic
+	toFindOutUnluckyDay
+	toFindOutLuckyDay
+}
+
+echo "STARTING THE GAME "
+main
 
 
