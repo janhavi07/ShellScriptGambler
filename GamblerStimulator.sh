@@ -12,7 +12,6 @@ declare totalAmountWinLost=0
 declare WIN=1
 declare LOSE=0
 declare addedAmountOfWinOrLost=0
-declare k=columnsOfDictinary
 declare WINNINGSTAKE=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
 declare LOSINGSTAKE=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
 
@@ -51,9 +50,9 @@ didHeWinOrLose
 
 function didHeWinOrLose()
 {
-	for k in "${winLostChart[@]}"
+	for column in "${winLostChart[@]}"
 	do
-		addedAmounOfWinOrLost=$(( $addedAmountOfWinOrLost + $k ))
+		addedAmounOfWinOrLost=$(( $addedAmountOfWinOrLost + $column ))
 	done
 	if [ $addedAmountOfWinOrLost -lt 0 ]
 	then
@@ -74,10 +73,9 @@ function didHeWinOrLose()
 
 function toFindOutUnluckyDay()
 {
-	for k in "${!luckyUnluckyChart[@]}"
+	for column in "${!luckyUnluckyChart[@]}"
 	do
-		echo Unluckyday Amount
-        	echo $k ${luckyUnluckyChart["$k"]}
+	   	echo $column ${luckyUnluckyChart["$column"]}
 	done |
 	sort -n -k2 | head -n 1 
 }
@@ -85,10 +83,9 @@ function toFindOutUnluckyDay()
 
 function toFindOutLuckyDay()
 {
-	for k in "${!luckyUnluckyChart[@]}"
+	for column in "${!luckyUnluckyChart[@]}"
 	do
-		echo Luckyday amount
-        	echo $k ${luckyUnluckyChart["$k"]}
+        	echo $column ${luckyUnluckyChart["$column"]}
 	done |
 	sort -n -k2 | tail -1 
 }
@@ -96,7 +93,9 @@ function toFindOutLuckyDay()
 function main()
 {
 	gamblingLogic
+	echo "UnluckyDay and Amount: "
 	toFindOutUnluckyDay
+	echo "LuckyDay and Amount :"
 	toFindOutLuckyDay
 }
 
