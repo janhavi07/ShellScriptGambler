@@ -73,7 +73,7 @@ function didHeWinOrLose()
 
 function toFindOutUnluckyDay()
 {
-	for k in "${!luckyUnluckyChart[@]}"
+	for kColumns in "${!luckyUnluckyChart[@]}"
 	do
 		echo Unluckyday Amount
         	echo $k ${luckyUnluckyChart["$k"]}
@@ -84,7 +84,7 @@ function toFindOutUnluckyDay()
 
 function toFindOutLuckyDay()
 {
-	for k in "${!luckyUnluckyChart[@]}"
+	for kColumns in "${!luckyUnluckyChart[@]}"
 	do
 		echo Luckyday amount
         	echo $k ${luckyUnluckyChart["$k"]}
