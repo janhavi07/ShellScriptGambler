@@ -12,6 +12,7 @@ declare totalAmountWinLost=0
 declare WIN=1
 declare LOSE=0
 declare addedAmountOfWinOrLost=0
+declare k=columnsOfDictinary
 declare WINNINGSTAKE=$(( ($RESIGNVALUE*$STAKE)/100  + $STAKE ))
 declare LOSINGSTAKE=$(( $STAKE - ($RESIGNVALUE*$STAKE)/100 ))
 
@@ -73,7 +74,7 @@ function didHeWinOrLose()
 
 function toFindOutUnluckyDay()
 {
-	for kColumns in "${!luckyUnluckyChart[@]}"
+	for k in "${!luckyUnluckyChart[@]}"
 	do
 		echo Unluckyday Amount
         	echo $k ${luckyUnluckyChart["$k"]}
@@ -84,7 +85,7 @@ function toFindOutUnluckyDay()
 
 function toFindOutLuckyDay()
 {
-	for kColumns in "${!luckyUnluckyChart[@]}"
+	for k in "${!luckyUnluckyChart[@]}"
 	do
 		echo Luckyday amount
         	echo $k ${luckyUnluckyChart["$k"]}
